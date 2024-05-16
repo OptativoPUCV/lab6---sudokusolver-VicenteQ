@@ -46,7 +46,7 @@ void print_node(Node* n){
 int is_valid(Node* n) {
     int seen[10]; 
 
-    for (int i = 0; i < 9; i++) {
+   for (int i = 0; i < 9; i++) {
         for (int k = 0; k < 10; k++) seen[k] = 0; 
         for (int j = 0; j < 9; j++) {
             int num = n->sudo[i][j];
@@ -55,9 +55,9 @@ int is_valid(Node* n) {
                 seen[num] = 1; 
             }
         }
-    }
+   }
 
-    for (int j = 0; j < 9; j++) {
+   for (int j = 0; j < 9; j++) {
         for (int k = 0; k < 10; k++) seen[k] = 0;
         for (int i = 0; i < 9; i++) {
             int num = n->sudo[i][j];
@@ -66,9 +66,9 @@ int is_valid(Node* n) {
                 seen[num] = 1; 
             }
         }
-    }
+   }
 
-    for (int k = 0; k < 9; k++) {
+   for (int k = 0; k < 9; k++) {
         for (int p = 0; p < 10; p++) seen[p] = 0;
         for (int p = 0; p < 9; p++) {
             int i = 3 * (k / 3) + (p / 3);
@@ -79,7 +79,7 @@ int is_valid(Node* n) {
                 seen[num] = 1; 
             }
         }
-    }
+   }
 
     return 1;
 }
@@ -108,24 +108,29 @@ int isSafe(Node* n, int row, int col, int num) {
 
 List* get_adj_nodes(Node* n) {
     List* list = createList();
+
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             if (n->sudo[i][j] == 0) { 
                 for (int num = 1; num <= 9; num++) {
                     if (isSafe(n, i, j, num)) {
-                        Node* newNode = (Node*)malloc(sizeof(Node));
-                        *newNode = *n;
+                        Node* newNode = copy(n);
                         newNode->sudo[i][j] = num;
-                        pushBack(list, newNode); 
+                        if (is_valid(newNode)) {
+                            pushBack(list, newNode);
+                        } else {
+                            free(newNode); 
+                        }
                     }
                 }
-                return list; 
+                return list;
             }
         }
     }
 
     return list;
 }
+
 
 
 int is_final(Node* n){
