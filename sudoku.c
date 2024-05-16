@@ -48,9 +48,46 @@ int is_valid(Node* n){
     return 1;
 }
 
+int isSafe(Node* n, int row, int col, int num) {
+    // Check the row
+    for (int i = 0; i < 9; i++) {
+        if (n->sudo[row][i] == num) return 0;
+    }
 
-List* get_adj_nodes(Node* n){
-    List* list=createList();
+    // Check the column
+    for (int i = 0; i < 9; i++) {
+        if (n->sudo[i][col] == num) return 0;
+    }
+
+    // Check the 3x3 subgrid
+    int startRow = row - row % 3, startCol = col - col % 3;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (n->sudo[i + startRow][j + startCol] == num) return 0;
+        }
+    }
+
+    return 1;
+}
+
+List* get_adj_nodes(Node* n) {
+    List* list = createList();
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            if (n->sudo[i][j] == 0) { 
+                for (int num = 1; num <= 9; num++) {
+                    if (isSafe(n, i, j, num)) {
+                        Node* newNode = (Node*)malloc(sizeof(Node));
+                        *newNode = *n;
+                        newNode->sudo[i][j] = num;
+                        pushBack(list, newNode); 
+                    }
+                }
+                return list; 
+            }
+        }
+    }
+
     return list;
 }
 
