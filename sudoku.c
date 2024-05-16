@@ -43,7 +43,43 @@ void print_node(Node* n){
     printf("\n");
 }
 
-int is_valid(Node* n){
+int is_valid(Node* n) {
+    int seen[10]; 
+
+    for (int i = 0; i < 9; i++) {
+        for (int k = 0; k < 10; k++) seen[k] = 0; 
+        for (int j = 0; j < 9; j++) {
+            int num = n->sudo[i][j];
+            if (num != 0) {
+                if (seen[num]) return 0; 
+                seen[num] = 1; 
+            }
+        }
+    }
+
+    for (int j = 0; j < 9; j++) {
+        for (int k = 0; k < 10; k++) seen[k] = 0;
+        for (int i = 0; i < 9; i++) {
+            int num = n->sudo[i][j];
+            if (num != 0) {
+                if (seen[num]) return 0; 
+                seen[num] = 1; 
+            }
+        }
+    }
+
+    for (int k = 0; k < 9; k++) {
+        for (int p = 0; p < 10; p++) seen[p] = 0;
+        for (int p = 0; p < 9; p++) {
+            int i = 3 * (k / 3) + (p / 3);
+            int j = 3 * (k % 3) + (p % 3);
+            int num = n->sudo[i][j];
+            if (num != 0) {
+                if (seen[num]) return 0;
+                seen[num] = 1; 
+            }
+        }
+    }
 
     return 1;
 }
